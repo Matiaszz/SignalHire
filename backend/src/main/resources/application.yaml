@@ -1,0 +1,86 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+spring:
+  application:
+    name: backend
+
+  # Datasource PostgreSQL Configuration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:signalhire}}
+    username: ${SPRING_DATASOURCE_USERNAME:${POSTGRES_USER:signalhire}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${POSTGRES_PASSWORD:signalhire_secret}}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: SignalHireHikariPool
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+
+  # JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Flyway Migration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  # RabbitMQ Broker Configuration
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:${RABBITMQ_HOST:localhost}}
+    port: ${SPRING_RABBITMQ_PORT:${RABBITMQ_PORT:5672}}
+    username: ${SPRING_RABBITMQ_USERNAME:${RABBITMQ_DEFAULT_USER:signalhire}}
+    password: ${SPRING_RABBITMQ_PASSWORD:${RABBITMQ_DEFAULT_PASS:signalhire_secret}}
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 3
+
+  # Spring AI (Google GenAI)
+  ai:
+    google:
+      genai:
+        api-key: ${SPRING_AI_GOOGLE_GENAI_API_KEY:}
+        chat:
+          options:
+            model: ${SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MODEL:gemini-2.5-flash}
+
+  # Spring Boot Docker Compose integration (disabled by default to prevent conflicts with standalone docker compose)
+  docker:
+    compose:
+      enabled: false
+
+# Spring Boot Actuator & Health Checks Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE:health,info,metrics,prometheus}
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: ${MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS:always}
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    db:
+      enabled: true
+    rabbit:
+      enabled: true
