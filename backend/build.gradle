@@ -23,7 +23,6 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
     set('datasourceMicrometerVersion', "2.3.0")
     set('springAiVersion', "2.0.1")
-    set('springModulithVersion', "2.1.1")
 }
 
 dependencies {
@@ -39,19 +38,16 @@ dependencies {
     implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'org.springframework.ai:spring-ai-pdf-document-reader'
     implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
-    implementation 'org.springframework.modulith:spring-modulith-events-api'
-    implementation 'org.springframework.modulith:spring-modulith-observability-api'
-    implementation 'org.springframework.modulith:spring-modulith-starter-core'
-    implementation 'org.springframework.modulith:spring-modulith-starter-jpa'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+    implementation platform('software.amazon.awssdk:bom:2.29.35')
+    implementation 'software.amazon.awssdk:s3'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.ai:spring-ai-spring-boot-docker-compose'
-    runtimeOnly 'org.springframework.modulith:spring-modulith-actuator'
-    runtimeOnly 'org.springframework.modulith:spring-modulith-events-amqp'
-    runtimeOnly 'org.springframework.modulith:spring-modulith-observability-core'
-    runtimeOnly 'org.springframework.modulith:spring-modulith-runtime'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp-test'
@@ -62,7 +58,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-    testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'com.h2database:h2'
@@ -73,7 +68,6 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "net.ttddyy.observation:datasource-micrometer-bom:${datasourceMicrometerVersion}"
-        mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
         mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
     }
 }

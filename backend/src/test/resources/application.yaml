@@ -1,6 +1,11 @@
 spring:
   application:
     name: backend-test
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
@@ -27,3 +32,25 @@ management:
   health:
     rabbit:
       enabled: false
+
+app:
+  security:
+    cors:
+      allowed-origins: http://localhost:5173
+    jwt:
+      secret: dGVzdC1zZWNyZXQta2V5LWZvci1zaWduYWxoaXJlLWp3dC1hdXRoZW50aWNhdGlvbi10ZXN0cy0yMDI2LTI1NmJpdHM=
+      access-expiration-ms: 900000
+      refresh-expiration-ms: 604800000
+      cookie-name: signalhire_refresh_token
+      cookie-secure: false
+      cookie-same-site: Lax
+
+aws:
+  region: us-east-1
+  access-key-id: test
+  secret-access-key: test
+  s3:
+    endpoint: http://localhost:4566
+    bucket: signalhire-avatars
+    path-style-access: true
+

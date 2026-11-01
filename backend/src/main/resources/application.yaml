@@ -6,6 +6,13 @@ spring:
   application:
     name: backend
 
+  # Multipart Upload Configuration (Profiles & Avatars)
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+
   # Datasource PostgreSQL Configuration
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:signalhire}}
@@ -84,3 +91,27 @@ management:
       enabled: true
     rabbit:
       enabled: true
+
+app:
+  storage:
+    provider: s3
+  security:
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+    jwt:
+      secret: ${JWT_SECRET:c2lnbmFsaGlyZS1zdXBlci1zZWNyZXQta2V5LWZvci1qd3QtaHMAC256LTI1Ni1iaXRzLW1pbmltdW0tMjAyNg==}
+      access-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+      refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+      cookie-name: ${JWT_COOKIE_NAME:signalhire_refresh_token}
+      cookie-secure: ${JWT_COOKIE_SECURE:false}
+      cookie-same-site: ${JWT_COOKIE_SAME_SITE:Lax}
+
+aws:
+  region: ${AWS_REGION:us-east-1}
+  access-key-id: ${AWS_ACCESS_KEY_ID:test}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY:test}
+  s3:
+    endpoint: ${AWS_S3_ENDPOINT:http://localhost:4566}
+    bucket: ${AWS_S3_BUCKET:signalhire-avatars}
+    path-style-access: ${AWS_S3_PATH_STYLE_ACCESS:true}
+
