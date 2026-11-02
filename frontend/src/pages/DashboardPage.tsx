@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   User as UserIcon,
   Mail,
@@ -26,7 +26,22 @@ export const DashboardPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  if (!user) return null
+  useEffect(() => {
+    if (user?.name) {
+      setName(user.name)
+    }
+  }, [user?.name])
+
+  if (!user) {
+    return (
+      <div className="flex-1 py-16 px-4 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-900 dark:border-neutral-700 dark:border-t-neutral-100" />
+          <span className="text-xs text-neutral-500 tracking-wider uppercase">Carregando dados do usuário...</span>
+        </div>
+      </div>
+    )
+  }
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -244,10 +259,12 @@ export const DashboardPage: React.FC = () => {
 
           <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950/50">
             <span className="block text-[11px] uppercase tracking-wider text-neutral-400 dark:text-neutral-500 font-semibold mb-1">
-              Identificador (UUID)
+              Identificador (ObjectId)
             </span>
             <p className="font-mono text-xs text-neutral-700 dark:text-neutral-300 truncate">
-              {user.id}
+              {typeof user.id === 'object' && user.id !== null
+                ? (user.id as { date?: string }).date || JSON.stringify(user.id)
+                : String(user.id || '')}
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
               Chave primária do usuário.

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -63,7 +62,6 @@ public class RefreshTokenUseCase {
         refreshTokenRepository.save(token);
 
         RefreshToken newToken = RefreshToken.builder()
-                .id(UUID.randomUUID())
                 .user(user)
                 .tokenHash(newHash)
                 .familyId(token.getFamilyId())

@@ -7,6 +7,7 @@ import dev.matias.signalhire.modules.auth.presentation.dto.UserResponseDTO;
 import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -24,7 +25,7 @@ public class UpdateUserProfileUseCase {
     private final StorageService storageService;
 
     @Transactional
-    public UserResponseDTO execute(UUID userId, UpdateProfileRequestDTO request, MultipartFile profilePicture) {
+    public UserResponseDTO execute(ObjectId userId, UpdateProfileRequestDTO request, MultipartFile profilePicture) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado."));
 

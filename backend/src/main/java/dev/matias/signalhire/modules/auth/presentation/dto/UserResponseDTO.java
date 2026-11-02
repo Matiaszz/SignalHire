@@ -4,11 +4,10 @@ import dev.matias.signalhire.modules.auth.domain.model.User;
 import lombok.Builder;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Builder
 public record UserResponseDTO(
-        UUID id,
+        String id,
         String name,
         String email,
         String profilePictureUrl,
@@ -20,7 +19,7 @@ public record UserResponseDTO(
             return null;
         }
         return UserResponseDTO.builder()
-                .id(user.getId())
+                .id(user.getId() != null ? user.getId().toHexString() : null)
                 .name(user.getName())
                 .email(user.getEmail())
                 .profilePictureUrl(user.getProfilePictureUrl())

@@ -12,13 +12,13 @@ import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageServi
 import dev.matias.signalhire.shared.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -44,7 +44,7 @@ public class RegisterUseCase {
             throw new BusinessException("O e-mail informado já está em uso na plataforma.", "EMAIL_ALREADY_EXISTS");
         }
 
-        UUID userId = UUID.randomUUID();
+        ObjectId userId = ObjectId.get();
         String avatarUrl = null;
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
@@ -52,7 +52,6 @@ public class RegisterUseCase {
         }
 
         User user = User.builder()
-                .id(userId)
                 .name(request.name().trim())
                 .email(normalizedEmail)
                 .passwordHash(passwordEncoder.encode(request.password()))
@@ -66,10 +65,9 @@ public class RegisterUseCase {
         // Issue Tokens
         String rawRefreshToken = jwtService.generateRawRefreshToken();
         String tokenHash = jwtService.hashToken(rawRefreshToken);
-        UUID familyId = UUID.randomUUID();
+        ObjectId familyId = ObjectId.get();
 
         RefreshToken refreshToken = RefreshToken.builder()
-                .id(UUID.randomUUID())
                 .user(user)
                 .tokenHash(tokenHash)
                 .familyId(familyId)

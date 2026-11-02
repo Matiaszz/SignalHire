@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -16,7 +17,6 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HexFormat;
-import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -32,7 +32,7 @@ public class JwtService {
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateAccessToken(UUID userId, String email, String name, String role) {
+    public String generateAccessToken(ObjectId userId, String email, String name, String role) {
         Instant now = Instant.now();
         Instant expiry = now.plusMillis(properties.getAccessExpirationMs());
 
@@ -71,9 +71,9 @@ public class JwtService {
                 .getPayload();
     }
 
-    public UUID extractUserId(String token) {
+    public ObjectId extractUserId(String token) {
         String subject = extractAllClaims(token).getSubject();
-        return UUID.fromString(subject);
+        return new ObjectId(subject);
     }
 
     public String extractEmail(String token) {

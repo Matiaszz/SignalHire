@@ -1,46 +1,4 @@
 services:
-  postgres:
-    image: postgres:17-alpine
-    container_name: signalhire-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-signalhire}
-      POSTGRES_USER: ${POSTGRES_USER:-signalhire}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-signalhire_secret}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-signalhire} -d ${POSTGRES_DB:-signalhire}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    networks:
-      - signalhire-network
-
-  rabbitmq:
-    image: rabbitmq:3.13-management-alpine
-    container_name: signalhire-rabbitmq
-    restart: unless-stopped
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-signalhire}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-signalhire_secret}
-    ports:
-      - "${RABBITMQ_PORT:-5672}:5672"
-      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 20s
-    networks:
-      - signalhire-network
-
   localstack:
     image: localstack/localstack:latest
     container_name: signalhire-localstack
@@ -71,36 +29,29 @@ services:
     restart: unless-stopped
     ports:
       - "${SERVER_PORT:-8080}:8080"
+    env_file:
+      - .env
     environment:
       SERVER_PORT: 8080
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-signalhire}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-signalhire}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-signalhire_secret}
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_DEFAULT_USER:-signalhire}
-      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_DEFAULT_PASS:-signalhire_secret}
+      SPRING_DATA_MONGODB_URI: ${SPRING_DATA_MONGODB_URI:-${MONGODB_URL}${MONGODB_NAME}?retryWrites=true&w=majority}
+      SPRING_DATA_MONGODB_DATABASE: ${SPRING_DATA_MONGODB_DATABASE:-${MONGODB_NAME}}
       SPRING_AI_GOOGLE_GENAI_API_KEY: ${SPRING_AI_GOOGLE_GENAI_API_KEY:-}
       SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MODEL: ${SPRING_AI_GOOGLE_GENAI_CHAT_OPTIONS_MODEL:-gemini-2.5-flash}
       AWS_REGION: ${AWS_REGION:-us-east-1}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_S3_ENDPOINT: http://localstack:4566
       AWS_S3_BUCKET: ${AWS_S3_BUCKET:-signalhire-avatars}
       AWS_S3_PATH_STYLE_ACCESS: "true"
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
-      JWT_SECRET: ${JWT_SECRET:-c2lnbmFsaGlyZS1zdXBlci1zZWNyZXQta2V5LWZvci1qd3QtaHMAC256LTI1Ni1iaXRzLW1pbmltdW0tMjAyNg==}
+      JWT_SECRET: ${JWT_SECRET}
       JWT_ACCESS_EXPIRATION_MS: ${JWT_ACCESS_EXPIRATION_MS:-900000}
       JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-604800000}
       JWT_COOKIE_NAME: ${JWT_COOKIE_NAME:-signalhire_refresh_token}
       JWT_COOKIE_SECURE: ${JWT_COOKIE_SECURE:-false}
       JWT_COOKIE_SAME_SITE: ${JWT_COOKIE_SAME_SITE:-Lax}
     depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
       localstack:
         condition: service_started
     healthcheck:
@@ -113,10 +64,6 @@ services:
       - signalhire-network
 
 volumes:
-  postgres_data:
-    driver: local
-  rabbitmq_data:
-    driver: local
   localstack_data:
     driver: local
 

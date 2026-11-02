@@ -3,6 +3,7 @@ package dev.matias.signalhire.shared.security;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.bson.types.ObjectId;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,21 +11,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Builder
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
 
-    private final UUID id;
+    private final ObjectId id;
     private final String email;
     private final String password;
     private final String name;
     private final boolean active;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public static UserPrincipal create(UUID id, String email, String passwordHash, String name, String role, boolean active) {
+    public static UserPrincipal create(ObjectId id, String email, String passwordHash, String name, String role, boolean active) {
         List<GrantedAuthority> authorities = List.of(
                 new SimpleGrantedAuthority("ROLE_" + role)
         );
@@ -40,7 +40,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 

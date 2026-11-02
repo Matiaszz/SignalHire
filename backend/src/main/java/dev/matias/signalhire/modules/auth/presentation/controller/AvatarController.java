@@ -2,6 +2,7 @@ package dev.matias.signalhire.modules.auth.presentation.controller;
 
 import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/avatars")
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class AvatarController {
 
     @GetMapping("/{userId}/{filename}")
     public ResponseEntity<InputStreamResource> getAvatar(
-            @PathVariable UUID userId,
+            @PathVariable ObjectId userId,
             @PathVariable String filename
     ) {
         String key = "avatars/" + userId + "/" + filename;

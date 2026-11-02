@@ -13,6 +13,7 @@ import dev.matias.signalhire.shared.exception.BusinessException;
 import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageService;
 import dev.matias.signalhire.shared.security.JwtProperties;
 import dev.matias.signalhire.shared.security.JwtService;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -132,7 +132,6 @@ public class AuthUseCasesTest {
                 .build();
 
         User user = User.builder()
-                .id(UUID.randomUUID())
                 .name("Carlos Silva")
                 .email("carlos@signalhire.dev")
                 .passwordHash(passwordEncoder.encode("senhaForte123"))
@@ -159,7 +158,6 @@ public class AuthUseCasesTest {
                 .build();
 
         User user = User.builder()
-                .id(UUID.randomUUID())
                 .name("Carlos Silva")
                 .email("carlos@signalhire.dev")
                 .passwordHash(passwordEncoder.encode("senhaForte123"))
@@ -179,10 +177,9 @@ public class AuthUseCasesTest {
     void shouldRotateRefreshToken() {
         String rawToken = "sample-token-string";
         String hash = jwtService.hashToken(rawToken);
-        UUID familyId = UUID.randomUUID();
+        ObjectId familyId = ObjectId.get();
 
         User user = User.builder()
-                .id(UUID.randomUUID())
                 .name("Carlos Silva")
                 .email("carlos@signalhire.dev")
                 .role("USER")
@@ -190,7 +187,6 @@ public class AuthUseCasesTest {
                 .build();
 
         RefreshToken oldToken = RefreshToken.builder()
-                .id(UUID.randomUUID())
                 .user(user)
                 .tokenHash(hash)
                 .familyId(familyId)
@@ -213,10 +209,9 @@ public class AuthUseCasesTest {
     void shouldRevokeFamilyOnReuse() {
         String rawToken = "stolen-reused-token";
         String hash = jwtService.hashToken(rawToken);
-        UUID familyId = UUID.randomUUID();
+        ObjectId familyId = ObjectId.get();
 
         RefreshToken revokedToken = RefreshToken.builder()
-                .id(UUID.randomUUID())
                 .tokenHash(hash)
                 .familyId(familyId)
                 .expiresAt(Instant.now().plusSeconds(3600))

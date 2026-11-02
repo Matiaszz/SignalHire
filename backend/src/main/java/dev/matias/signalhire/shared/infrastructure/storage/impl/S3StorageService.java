@@ -4,6 +4,7 @@ import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageServi
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -70,7 +71,7 @@ public class S3StorageService implements StorageService {
     }
 
     @Override
-    public String uploadAvatar(UUID userId, MultipartFile file) {
+    public String uploadAvatar(ObjectId userId, MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Arquivo de foto de perfil vazio ou ausente.");
         }
