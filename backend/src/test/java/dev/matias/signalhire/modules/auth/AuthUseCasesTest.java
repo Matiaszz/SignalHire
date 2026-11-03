@@ -9,6 +9,7 @@ import dev.matias.signalhire.modules.auth.domain.repository.RefreshTokenReposito
 import dev.matias.signalhire.modules.auth.domain.repository.UserRepository;
 import dev.matias.signalhire.modules.auth.presentation.dto.LoginRequestDTO;
 import dev.matias.signalhire.modules.auth.presentation.dto.RegisterRequestDTO;
+import dev.matias.signalhire.shared.exception.ApplicationException;
 import dev.matias.signalhire.shared.exception.BusinessException;
 import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageService;
 import dev.matias.signalhire.shared.security.JwtProperties;
@@ -119,7 +120,7 @@ public class AuthUseCasesTest {
         when(userRepository.existsByEmailIgnoreCase("carlos@signalhire.dev")).thenReturn(true);
 
         assertThatThrownBy(() -> registerUseCase.execute(request, null, "Agent", "127.0.0.1"))
-                .isInstanceOf(BusinessException.class)
+                .isInstanceOf(ApplicationException.class)
                 .hasMessageContaining("já está em uso");
     }
 

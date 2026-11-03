@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
@@ -20,7 +21,12 @@ public class S3StorageProperties {
     @Setter
     public static class S3 {
         private String endpoint = "http://localhost:4566";
-        private String bucket = "signalhire-avatars";
+        private String publicEndpoint = "http://localhost:4566";
+        private String bucket = "signalhire-files";
         private boolean pathStyleAccess = true;
+
+        public String getPublicEndpoint() {
+            return StringUtils.hasText(publicEndpoint) ? publicEndpoint : endpoint;
+        }
     }
 }

@@ -78,6 +78,7 @@ aws:
   secret-access-key: ${AWS_SECRET_ACCESS_KEY}
   s3:
     endpoint: ${AWS_S3_ENDPOINT:http://localhost:4566}
-    bucket: ${AWS_S3_BUCKET:signalhire-avatars}
+    public-endpoint: ${AWS_S3_PUBLIC_ENDPOINT:${AWS_S3_ENDPOINT:http://localhost:4566}}
+    bucket: ${AWS_S3_BUCKET:signalhire-files}
     path-style-access: ${AWS_S3_PATH_STYLE_ACCESS:true}
 

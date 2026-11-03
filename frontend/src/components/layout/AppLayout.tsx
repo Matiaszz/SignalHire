@@ -11,10 +11,9 @@ export const AppLayout: React.FC = () => {
       <main className="flex-1 flex flex-col">
         <Outlet />
       </main>
-      <footer className="border-t border-neutral-200 py-6 text-center text-xs text-neutral-500 dark:border-neutral-800 dark:text-neutral-500 transition-colors">
+      <footer className="border-t  border-neutral-200 py-6 text-center text-xs text-neutral-500 dark:border-neutral-800 dark:text-neutral-500 transition-colors">
         <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>SignalHire &copy; {CURRENT_YEAR} — Autenticação Segura & S3 LocalStack</span>
-          <span className="font-mono text-[11px] text-neutral-400 dark:text-neutral-600">Tema Monocromático</span>
+          <span>SignalHire &copy; {CURRENT_YEAR}</span>
         </div>
       </footer>
     </div>

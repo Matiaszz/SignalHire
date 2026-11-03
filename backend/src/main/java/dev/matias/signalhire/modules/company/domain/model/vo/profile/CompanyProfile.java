@@ -1,10 +1,15 @@
 package dev.matias.signalhire.modules.company.domain.model.vo.profile;
 
 import com.google.common.collect.ImmutableList;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
+import java.util.Collections;
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class CompanyProfile {
     private String mission;
@@ -17,16 +22,15 @@ public class CompanyProfile {
     private InnovationLevel innovationLevel;
     private List<String> benefits;
 
-    public ImmutableList<String> getValues(){
-        return ImmutableList.copyOf(this.values);
+    public List<String> getValues() {
+        return this.values != null ? ImmutableList.copyOf(this.values) : Collections.emptyList();
     }
 
-    public ImmutableList<String> getBenefits(){
-        return ImmutableList.copyOf(this.benefits);
+    public List<String> getBenefits() {
+        return this.benefits != null ? ImmutableList.copyOf(this.benefits) : Collections.emptyList();
     }
 
-    public ImmutableList<WorkEnvironment> getWorkEnvironments(){
-        return ImmutableList.copyOf(this.workEnvironments);
+    public List<WorkEnvironment> getWorkEnvironments() {
+        return this.workEnvironments != null ? ImmutableList.copyOf(this.workEnvironments) : Collections.emptyList();
     }
-
 }

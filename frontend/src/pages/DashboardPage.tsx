@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   User as UserIcon,
   Mail,
   Calendar,
   Shield,
-  HardDrive,
   LogOut,
   CheckCircle2,
   AlertCircle,
   Edit2,
   X,
+  Building2,
+  ArrowRight,
 } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
+import { companyService } from '../services/companyService'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { AvatarUploader } from '../components/auth/AvatarUploader'
@@ -23,6 +26,7 @@ export const DashboardPage: React.FC = () => {
   const [name, setName] = useState(user?.name || '')
   const [newAvatar, setNewAvatar] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [companiesCount, setCompaniesCount] = useState<number | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -30,6 +34,10 @@ export const DashboardPage: React.FC = () => {
     if (user?.name) {
       setName(user.name)
     }
+    companyService
+      .getMyCompanies()
+      .then((data) => setCompaniesCount(data.length))
+      .catch(() => setCompaniesCount(0))
   }, [user?.name])
 
   if (!user) {
@@ -126,12 +134,6 @@ export const DashboardPage: React.FC = () => {
                 {user.name.charAt(0).toUpperCase()}
               </div>
             )}
-            <div
-              className="absolute -bottom-1 -right-1 rounded-full bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 p-1.5 shadow-xs"
-              title="S3 LocalStack Storage"
-            >
-              <HardDrive className="h-3.5 w-3.5" />
-            </div>
           </div>
 
           {/* User Details Header */}
@@ -166,12 +168,8 @@ export const DashboardPage: React.FC = () => {
                 Função: {user.role}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300">
-                <HardDrive className="h-3 w-3" />
-                LocalStack S3
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300">
                 <Calendar className="h-3 w-3" />
-                Desde {formattedDate}
+                Membro desde {formattedDate}
               </span>
             </div>
           </div>
@@ -231,6 +229,33 @@ export const DashboardPage: React.FC = () => {
           </form>
         )}
 
+        {/* Companies Quick Access Banner */}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-xl border border-neutral-200 bg-neutral-50/70 dark:border-neutral-800 dark:bg-neutral-950/40">
+          <div className="flex items-center gap-3.5">
+            <div className="p-2.5 rounded-xl bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900">
+              <Building2 className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                Minhas Empresas
+              </h3>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                {companiesCount === null
+                  ? 'Consultando suas empresas...'
+                  : `${companiesCount} ${companiesCount === 1 ? 'organização vinculada' : 'organizações vinculadas'} à sua conta.`}
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/companies"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white transition-colors shadow-xs"
+          >
+            Gerenciar Empresas
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
         {/* Informational Cards */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950/50">
@@ -247,13 +272,13 @@ export const DashboardPage: React.FC = () => {
 
           <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950/50">
             <span className="block text-[11px] uppercase tracking-wider text-neutral-400 dark:text-neutral-500 font-semibold mb-1">
-              Armazenamento S3
+              Foto de Perfil
             </span>
             <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-              {user.profilePictureUrl ? 'Foto Sincronizada' : 'Sem foto enviada'}
+              {user.profilePictureUrl ? 'Foto Cadastrada' : 'Sem foto enviada'}
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-              LocalStack S3 Bucket: <code className="font-mono text-[11px]">signalhire-avatars</code>
+              {user.profilePictureUrl ? 'Foto visível para empresas e candidatos.' : 'Adicione uma foto para personalizar sua conta.'}
             </p>
           </div>
 

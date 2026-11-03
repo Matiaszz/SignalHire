@@ -111,6 +111,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(response);
     }
 
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiErrorResponse> handleTypeMismatch(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        ApplicationExceptionCode code = ApplicationExceptionCode.RESOURCE_NOT_FOUND;
+        ApiErrorResponse response = ApiErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("Não Encontrado")
+                .message("O recurso ou identificador solicitado não foi encontrado.")
+                .code(code)
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         ApiErrorResponse response = ApiErrorResponse.builder()

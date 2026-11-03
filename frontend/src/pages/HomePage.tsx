@@ -13,19 +13,16 @@ export const HomePage: React.FC = () => {
         {/* Monochromatic Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 px-3.5 py-1 text-xs font-medium text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
           <span className="h-1.5 w-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100" />
-          SignalHire • Autenticação & Armazenamento S3
+          SignalHire • Recrutamento & Seleção Inteligente
         </div>
 
         {/* Hero Title */}
         <div className="space-y-3">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-            Autenticação Segura &amp;
+            SignalHire
             <br />
-            Armazenamento S3 LocalStack
+            Recrutamento & Seleção Inteligente
           </h1>
-          <p className="max-w-xl mx-auto text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            Módulo de autenticação com dados essenciais: nome, e-mail, senha criptografada e foto de perfil armazenada em bucket S3 via LocalStack e Docker Compose.
-          </p>
         </div>
 
         {/* Action Buttons */}

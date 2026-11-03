@@ -10,6 +10,8 @@ services:
     environment:
       - SERVICES=s3
       - AWS_DEFAULT_REGION=${AWS_REGION:-us-east-1}
+      - EXTRA_CORS_ALLOWED_ORIGINS=*
+      - DISABLE_CORS_CHECKS=1
     volumes:
       - localstack_data:/var/lib/localstack
     healthcheck:
@@ -42,7 +44,8 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_S3_ENDPOINT: http://localstack:4566
-      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-signalhire-avatars}
+      AWS_S3_PUBLIC_ENDPOINT: ${AWS_S3_PUBLIC_ENDPOINT:-http://localhost:4566}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-signalhire-files}
       AWS_S3_PATH_STYLE_ACCESS: "true"
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       JWT_SECRET: ${JWT_SECRET}

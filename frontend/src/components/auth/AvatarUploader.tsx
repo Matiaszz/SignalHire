@@ -118,7 +118,7 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({
           <div className="flex flex-col items-center justify-center p-3 text-center">
             <UserIcon className="h-8 w-8 text-neutral-400 dark:text-neutral-500 mb-1" />
             <span className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
-              <UploadCloud className="h-3 w-3" /> Foto S3
+              <UploadCloud className="h-3 w-3" /> Enviar foto
             </span>
           </div>
         )}

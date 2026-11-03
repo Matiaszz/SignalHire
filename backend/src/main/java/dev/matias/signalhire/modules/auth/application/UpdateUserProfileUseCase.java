@@ -33,7 +33,9 @@ public class UpdateUserProfileUseCase {
             user.setName(request.name().trim());
         }
 
-        if (profilePicture != null && !profilePicture.isEmpty()) {
+        if (request != null && StringUtils.hasText(request.profilePictureUrl())) {
+            user.setProfilePictureUrl(request.profilePictureUrl().trim());
+        } else if (profilePicture != null && !profilePicture.isEmpty()) {
             String newAvatarUrl = storageService.uploadAvatar(user.getId(), profilePicture);
             user.setProfilePictureUrl(newAvatarUrl);
         }

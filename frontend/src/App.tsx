@@ -7,6 +7,8 @@ import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { DashboardPage } from './pages/DashboardPage'
+import { CompaniesPage } from './pages/CompaniesPage'
+import { CompanyDetailPage } from './pages/CompanyDetailPage'
 
 export function App() {
   return (
@@ -36,6 +38,22 @@ export function App() {
               element={
                 <ProtectedRoute>
                   <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/companies"
+              element={
+                <ProtectedRoute>
+                  <CompaniesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/companies/:id"
+              element={
+                <ProtectedRoute>
+                  <CompanyDetailPage />
                 </ProtectedRoute>
               }
             />

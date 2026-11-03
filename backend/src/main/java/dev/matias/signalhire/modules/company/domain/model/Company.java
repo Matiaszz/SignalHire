@@ -51,8 +51,9 @@ public class Company {
     @Setter
     private CompanyProfile profile;
 
+    @Setter
     @Builder.Default
-    List<Site> sites = new ArrayList<>();
+    private List<Site> sites = new ArrayList<>();
 
     @Builder.Default
     private Set<Member> members = new HashSet<>();
@@ -64,7 +65,6 @@ public class Company {
     private Instant updatedAt;
 
     public void addSite(Site site){
-
         this.sites.add(site);
     }
 
@@ -82,8 +82,8 @@ public class Company {
         );
     }
 
-    public boolean removeMember(Member member){
-        return this.members.remove(member);
+    public void removeMember(Member member){
+        this.members.remove(member);
     }
 
     public boolean changeMemberRole(Member member, CompanyRole role, User currentUser) {

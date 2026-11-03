@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Moon, Sun, LogOut } from 'lucide-react'
+import { Moon, Sun, LogOut, Building2, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '../../context/useAuth'
 import { useTheme } from '../../context/useTheme'
 
@@ -17,14 +17,35 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-neutral-200 bg-white/80 backdrop-blur-md transition-colors dark:border-neutral-800 dark:bg-neutral-950/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="h-8 w-8 rounded-lg bg-neutral-900 flex items-center justify-center text-white dark:bg-neutral-100 dark:text-neutral-950 font-bold tracking-tighter text-base shadow-xs group-hover:scale-105 transition-transform">
-            SH
-          </div>
-          <span className="font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
-            SignalHire
-          </span>
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="h-8 w-8 rounded-lg bg-neutral-900 flex items-center justify-center text-white dark:bg-neutral-100 dark:text-neutral-950 font-bold tracking-tighter text-base shadow-xs group-hover:scale-105 transition-transform">
+              SH
+            </div>
+            <span className="font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
+              SignalHire
+            </span>
+          </Link>
+
+          {isAuthenticated && (
+            <nav className="hidden sm:flex items-center gap-1">
+              <Link
+                to="/companies"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+              >
+                <Building2 className="h-3.5 w-3.5" />
+                Empresas
+              </Link>
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                Meu Perfil
+              </Link>
+            </nav>
+          )}
+        </div>
 
         <div className="flex items-center gap-3">
           <button
@@ -37,6 +58,14 @@ export const Navbar: React.FC = () => {
 
           {isAuthenticated && user ? (
             <div className="flex items-center gap-3">
+              <Link
+                to="/companies"
+                className="sm:hidden flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-900"
+                title="Empresas"
+              >
+                <Building2 className="h-4 w-4" />
+              </Link>
+
               <Link
                 to="/dashboard"
                 className="flex items-center gap-2 rounded-lg py-1 px-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900 transition-colors"

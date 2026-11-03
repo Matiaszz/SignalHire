@@ -6,5 +6,7 @@ import lombok.Builder;
 @Builder
 public record UpdateProfileRequestDTO(
         @Size(min = 2, max = 120, message = "O nome deve ter entre 2 e 120 caracteres.")
-        String name
+        String name,
+
+        String profilePictureUrl
 ) {}

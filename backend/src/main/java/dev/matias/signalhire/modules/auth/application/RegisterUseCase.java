@@ -49,9 +49,11 @@ public class RegisterUseCase {
         }
 
         ObjectId userId = ObjectId.get();
-        String avatarUrl = null;
+        String avatarUrl = org.springframework.util.StringUtils.hasText(request.profilePictureUrl())
+                ? request.profilePictureUrl().trim()
+                : null;
 
-        if (profilePicture != null && !profilePicture.isEmpty()) {
+        if (avatarUrl == null && profilePicture != null && !profilePicture.isEmpty()) {
             avatarUrl = storageService.uploadAvatar(userId, profilePicture);
         }
 
