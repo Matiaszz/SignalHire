@@ -7,6 +7,8 @@ import dev.matias.signalhire.modules.auth.domain.repository.UserRepository;
 import dev.matias.signalhire.modules.auth.presentation.dto.AuthResponseDTO;
 import dev.matias.signalhire.modules.auth.presentation.dto.UserResponseDTO;
 import dev.matias.signalhire.modules.auth.presentation.dto.RegisterRequestDTO;
+import dev.matias.signalhire.shared.exception.ApplicationException;
+import dev.matias.signalhire.shared.exception.ApplicationExceptionCode;
 import dev.matias.signalhire.shared.exception.BusinessException;
 import dev.matias.signalhire.shared.infrastructure.storage.contract.StorageService;
 import dev.matias.signalhire.shared.security.JwtService;
@@ -41,7 +43,9 @@ public class RegisterUseCase {
         String normalizedEmail = request.email().trim().toLowerCase();
 
         if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
-            throw new BusinessException("O e-mail informado já está em uso na plataforma.", "EMAIL_ALREADY_EXISTS");
+            throw new ApplicationException(
+                    ApplicationExceptionCode.EMAIL_ALREADY_EXISTS,
+                    "O e-mail informado já está em uso na plataforma.");
         }
 
         ObjectId userId = ObjectId.get();

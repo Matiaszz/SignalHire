@@ -23,6 +23,6 @@ public class ApiErrorResponse {
     private String error;
     private String message;
     private String path;
-    private String code;
+    private ApplicationExceptionCode code;
     private Map<String, String> errors;
 }

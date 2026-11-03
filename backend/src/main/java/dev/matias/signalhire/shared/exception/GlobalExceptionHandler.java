@@ -19,6 +19,19 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ApiErrorResponse> handleApplicationException(ApplicationException ex, HttpServletRequest request) {
+        ApiErrorResponse response = ApiErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Violação de Regra de Negócio")
+                .message(ex.getMessage())
+                .code(ex.getErrorCode())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(ex.getStatus()).body(response);
+    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
@@ -31,7 +44,7 @@ public class GlobalExceptionHandler {
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(ex.getCode().getStatus()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -40,60 +53,62 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-
+        ApplicationExceptionCode code = ApplicationExceptionCode.VALIDATION_FAILED;
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(code.getStatusValue())
                 .error("Dados Inválidos")
                 .message("Erro de validação nos campos informados.")
-                .code("VALIDATION_FAILED")
+                .code(code)
                 .path(request.getRequestURI())
                 .errors(errors)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(code.getStatus()).body(response);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+        ApplicationExceptionCode code = ApplicationExceptionCode.INVALID_CREDENTIALS;
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(HttpStatus.UNAUTHORIZED.value())
+                .status(code.getStatusValue())
                 .error("Não Autorizado")
                 .message(ex.getMessage())
-                .code("INVALID_CREDENTIALS")
+                .code(code)
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(code.getStatus()).body(response);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ApiErrorResponse> handleNotFound(NoSuchElementException ex, HttpServletRequest request) {
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(HttpStatus.NOT_FOUND.value())
+                .status(ApplicationExceptionCode.RESOURCE_NOT_FOUND.getStatus().value())
                 .error("Não Encontrado")
                 .message(ex.getMessage())
-                .code("RESOURCE_NOT_FOUND")
+                .code(ApplicationExceptionCode.RESOURCE_NOT_FOUND)
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(ApplicationExceptionCode.RESOURCE_NOT_FOUND.getStatus()).body(response);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ApiErrorResponse> handleMaxSize(MaxUploadSizeExceededException ex, HttpServletRequest request) {
+        ApplicationExceptionCode code = ApplicationExceptionCode.FILE_TOO_LARGE;
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(HttpStatus.PAYLOAD_TOO_LARGE.value())
+                .status(code.getStatusValue())
                 .error("Arquivo Muito Grande")
                 .message("O arquivo enviado excede o limite máximo permitido de 10MB.")
-                .code("FILE_TOO_LARGE")
+                .code(code)
                 .path(request.getRequestURI())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(response);
+        return ResponseEntity.status(code.getStatus()).body(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -103,7 +118,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Requisição Inválida")
                 .message(ex.getMessage())
-                .code("BAD_REQUEST")
+                .code(ApplicationExceptionCode.BAD_REQUEST)
                 .path(request.getRequestURI())
                 .build();
 
@@ -113,13 +128,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
         log.error("Erro interno inesperado no endpoint {}", request.getRequestURI(), ex);
-
+        ApplicationExceptionCode code = ApplicationExceptionCode.INTERNAL_ERROR;
         ApiErrorResponse response = ApiErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Erro Interno do Servidor")
                 .message("Ocorreu um erro interno inesperado. Tente novamente mais tarde.")
-                .code("INTERNAL_SERVER_ERROR")
+                .code(code)
                 .path(request.getRequestURI())
                 .build();
 
